@@ -15,10 +15,13 @@ except Exception:
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    "cimetiereapp-production.up.railway.app",
+]
+
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.railway.app",
+    "https://cimetiereapp-production.up.railway.app",
 ]
 
 
