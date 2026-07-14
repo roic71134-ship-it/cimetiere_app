@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Cimetière</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { width: 100%; height: 100vh; }
+        .legend { background: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1.8; }
+        .legend-item { display: flex; align-items: center; margin: 4px 0; font-size: 13px; }
+        .legend-color { width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; border: 2px solid white; box-shadow: 0 0 2px rgba(0,0,0,0.3); }
+        .btn-reserver { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-top: 8px; width: 100%; font-weight: bold; }
+        .btn-reserver:hover { background: #218838; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 12px; padding: 30px; width: 500px; max-width: 95%; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { color: #1b5e20; margin-bottom: 20px; font-size: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #1b5e20; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-submit { background: #1b5e20; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-submit:hover { background: #145214; }
+        .btn-cancel { background: #f5f5f5; color: #333; border: 1px solid #ddd; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 15px; width: 100%; margin-top: 8px; }
+        .msg-success { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 8px; margin-top: 10px; text-align: center; font-weight: bold; }
+        .msg-error { background: #ffebee; color: #c62828; padding: 12px; border-radius: 8px; margin-top: 10px; text-align: center; }
+        .caveau-info { background: #f1f8e9; border-left: 4px solid #1b5e20; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<!-- Modal de réservation -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h2>📋 Nouvelle réservation</h2>
+        <div class="caveau-info" id="caveauInfo"></div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Nom du défunt *</label>
+                <input type="text" id="nom" placeholder="Nom">
+            </div>
+            <div class="form-group">
+                <label>Prénom du défunt *</label>
+                <input type="text" id="prenom" placeholder="Prénom">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Date de décès *</label>
+                <input type="date" id="date_deces">
+            </div>
+            <div class="form-group">
+                <label>N° Acte de décès</label>
+                <input type="text" id="numero_acte" placeholder="Optionnel">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Nom responsable famille</label>
+                <input type="text" id="nom_famille" placeholder="Optionnel">
+            </div>
+            <div class="form-group">
+                <label>Téléphone famille</label>
+                <input type="text" id="tel_famille" placeholder="Optionnel">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Type de concession *</label>
+            <select id="type_concession">
+                <option value="TEMPORAIRE">Temporaire (5 ans)</option>
+                <option value="TRENTENAIRE">Trentenaire (30 ans)</option>
+                <option value="PERPETUELLE">Perpétuelle</option>
+                <option value="FAMILIALE">Familiale</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Notes (optionnel)</label>
+            <input type="text" id="notes" placeholder="Informations complémentaires...">
+        </div>
+
+        <div id="msgRetour"></div>
+
+        <button class="btn-submit" onclick="soumettrReservation()">✅ Soumettre la réservation</button>
+        <button class="btn-cancel" onclick="fermerModal()">Annuler</button>
+    </div>
+</div>
+
+<script>
+    var API_ORIGIN = window.location.origin;
+    var map = L.map('map').setView([-4.7692, 11.8635], 13);
+    var caveauSelectionne = null;
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap © CARTO'
+    }).addTo(map);
+
+    fetch(API_ORIGIN + '/api/v1/caveaux/geojson')
+        .then(r => r.json())
+        .then(geojson => {
+            var bounds = [];
+            geojson.features.forEach(function(feature) {
+                var coords = feature.geometry.coordinates;
+                var props = feature.properties;
+                var estDisponible = props.statut === 'DISPONIBLE';
+
+                bounds.push([coords[1], coords[0]]);
+
+                var marker = L.circleMarker([coords[1], coords[0]], {
+                    radius: estDisponible ? 14 : 12,
+                    fillColor: props.couleur,
+                    color: '#ffffff',
+                    weight: estDisponible ? 3 : 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(map);
+
+                var popupContent = '<div style="font-family:Arial;min-width:200px">' +
+                    '<b style="font-size:15px">Caveau ' + props.reference + '</b><hr>' +
+                    '<b>Statut :</b> ' + props.statut + '<br>' +
+                    '<b>Zone :</b> ' + props.zone + '<br>' +
+                    '<b>Type :</b> ' + props.type_concession + '<br>' +
+                    '<b>Prix temp. :</b> ' + parseInt(props.prix_temporaire).toLocaleString() + ' FCFA<br>' +
+                    '<b>Prix perp. :</b> ' + parseInt(props.prix_perpetuelle).toLocaleString() + ' FCFA';
+
+                if (estDisponible) {
+                    popupContent += '<br><button class="btn-reserver" onclick="ouvrirReservation(' + props.id + ', \'' + props.reference + '\', ' + props.prix_temporaire + ', \'' + props.zone + '\')">✅ Réserver ce caveau</button>';
+                }
+                popupContent += '</div>';
+                marker.bindPopup(popupContent);
+            });
+
+            if (bounds.length > 0) {
+                map.fitBounds(bounds, {padding: [50, 50], maxZoom: 17});
+            }
+        });
+
+    function ouvrirReservation(id, reference, prix_temp, zone) {
+        caveauSelectionne = {id: id, reference: reference, prix_temporaire: prix_temp, zone: zone};
+        document.getElementById('caveauInfo').innerHTML =
+            '<strong>Caveau :</strong> ' + reference +
+            ' | <strong>Zone :</strong> ' + zone +
+            ' | <strong>Prix temp. :</strong> ' + parseInt(prix_temp).toLocaleString() + ' FCFA';
+        document.getElementById('msgRetour').innerHTML = '';
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+    
+
+    function fermerModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        caveauSelectionne = null;
+    }
+
+    function getToken() {
+        // Récupérer le token depuis l'URL ou le localStorage de l'app parent
+        var params = new URLSearchParams(window.location.search);
+        return params.get('token') || '';
+    }
+
+    function soumettrReservation() {
+        var nom = document.getElementById('nom').value.trim();
+        var prenom = document.getElementById('prenom').value.trim();
+        var date_deces = document.getElementById('date_deces').value;
+        var type_concession = document.getElementById('type_concession').value;
+
+        if (!nom || !prenom || !date_deces) {
+            document.getElementById('msgRetour').innerHTML = '<div class="msg-error">Veuillez remplir les champs obligatoires (Nom, Prénom, Date de décès).</div>';
+            return;
+        }
+
+        var token = getToken();
+        if (!token) {
+            document.getElementById('msgRetour').innerHTML = '<div class="msg-error">Session expirée. Veuillez vous reconnecter dans l\'application.</div>';
+            return;
+        }
+
+        var data = {
+            caveau_id: caveauSelectionne.id,
+            type_concession: type_concession,
+            notes_client: document.getElementById('notes').value,
+            defunt: {
+                nom: nom,
+                prenom: prenom,
+                date_deces: date_deces,
+                numero_acte_deces: document.getElementById('numero_acte').value,
+                nom_famille_responsable: document.getElementById('nom_famille').value,
+                telephone_famille: document.getElementById('tel_famille').value,
+                nationalite: 'Congolaise',
+                sexe: 'M',
+            }
+        };
+
+        fetch(API_ORIGIN + '/api/v1/reservations/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.numero) {
+                document.getElementById('msgRetour').innerHTML = '<div class="msg-success">✅ Réservation ' + res.numero + ' soumise avec succès ! Vous recevrez un email de confirmation.</div>';
+                setTimeout(() => fermerModal(), 3000);
+            } else {
+                document.getElementById('msgRetour').innerHTML = '<div class="msg-error">' + (res.message || 'Erreur lors de la réservation.') + '</div>';
+            }
+        })
+        .catch(err => {
+            document.getElementById('msgRetour').innerHTML = '<div class="msg-error">Erreur de connexion.</div>';
+        });
+    }
+
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function() {
+        var div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = '<b>Légende</b><br>' +
+            '<div class="legend-item"><div class="legend-color" style="background:#28a745"></div>Disponible (cliquer pour réserver)</div>' +
+            '<div class="legend-item"><div class="legend-color" style="background:#fd7e14"></div>Réservé</div>' +
+            '<div class="legend-item"><div class="legend-color" style="background:#dc3545"></div>Occupé</div>' +
+            '<div class="legend-item"><div class="legend-color" style="background:#6c757d"></div>Non exploitable</div>' +
+            '<div class="legend-item"><div class="legend-color" style="background:#ffc107"></div>Maintenance</div>';
+        return div;
+    };
+    legend.addTo(map);
+</script>
+</body>
+</html>

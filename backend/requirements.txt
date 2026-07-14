@@ -1,0 +1,17 @@
+django==4.2.16
+django-ninja==1.3.0
+psycopg2-binary==2.9.9
+djangorestframework-simplejwt
+django-cors-headers
+django-environ
+django-auditlog
+celery
+django-celery-beat
+django-celery-results
+redis
+httpx
+openpyxl
+xhtml2pdf
+gunicorn
+whitenoise
+requests

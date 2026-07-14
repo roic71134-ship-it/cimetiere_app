@@ -1,0 +1,116 @@
+import flet as ft
+from config import COULEURS, APP_NOM
+
+
+def vue_mfa(page: ft.Page, email: str, on_success):
+    """Page MFA — Étape 2 : Saisie du code reçu par email."""
+
+    code_input = ft.TextField(
+        label="Code de vérification",
+        hint_text="000000",
+        prefix_icon=ft.icons.SECURITY_OUTLINED,
+        border_radius=10,
+        focused_border_color=COULEURS["primaire"],
+        color="black",
+        width=380,
+        max_length=6,
+        text_align=ft.TextAlign.CENTER,
+        text_size=24,
+    )
+
+    message = ft.Text("", color=COULEURS["danger"], size=13)
+    loading = ft.ProgressRing(width=20, height=20, visible=False)
+
+    def on_verify(e):
+        from api_client import client
+
+        if not code_input.value or len(code_input.value) < 6:
+            message.value = "Veuillez entrer le code à 6 chiffres."
+            page.update()
+            return
+
+        loading.visible = True
+        btn_verify.disabled = True
+        message.value = ""
+        page.update()
+
+        result = client.verify_mfa(email, code_input.value)
+
+        loading.visible = False
+        btn_verify.disabled = False
+
+        if result.get("access"):
+            on_success(result)
+        else:
+            message.value = result.get("error", "Code invalide ou expiré.")
+
+        page.update()
+
+    def on_retour(e):
+        page.go("/login")
+
+    btn_verify = ft.ElevatedButton(
+        text="Vérifier le code",
+        width=380,
+        height=45,
+        bgcolor=COULEURS["primaire"],
+        color=COULEURS["blanc"],
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+        on_click=on_verify,
+    )
+
+    return ft.Container(
+        content=ft.Column(
+            controls=[
+                ft.Container(height=40),
+                ft.Icon(
+                    ft.icons.MARK_EMAIL_READ_OUTLINED,
+                    size=60,
+                    color=COULEURS["primaire"],
+                ),
+                ft.Container(height=10),
+                ft.Text(
+                    "Vérification en deux étapes",
+                    size=20,
+                    weight=ft.FontWeight.BOLD,
+                    color=COULEURS["primaire"],
+                    text_align=ft.TextAlign.CENTER,
+                ),
+                ft.Container(height=10),
+                ft.Text(
+                    f"Un code a été envoyé à",
+                    size=13,
+                    color=COULEURS["texte_clair"],
+                    text_align=ft.TextAlign.CENTER,
+                ),
+                ft.Text(
+                    email,
+                    size=14,
+                    weight=ft.FontWeight.BOLD,
+                    color=COULEURS["texte"],
+                    text_align=ft.TextAlign.CENTER,
+                ),
+                ft.Container(height=30),
+                code_input,
+                ft.Container(height=5),
+                message,
+                ft.Container(height=15),
+                btn_verify,
+                ft.Container(height=10),
+                loading,
+                ft.Container(height=20),
+                ft.TextButton(
+                    "Retour à la connexion",
+                    on_click=on_retour,
+                    style=ft.ButtonStyle(
+                        color=COULEURS["secondaire"],
+                    ),
+                ),
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=0,
+        ),
+        padding=ft.padding.all(30),
+        alignment=ft.alignment.center,
+        expand=True,
+    )
