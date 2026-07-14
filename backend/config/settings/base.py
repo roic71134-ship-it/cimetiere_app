@@ -96,11 +96,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "railway",
-        "USER": "postgres",
-        "PASSWORD": "cgGag2gcEagG5C5e2EgACBeabE4eB1b6",
-        "HOST": "thomas.proxy.rlwy.net",
-        "PORT": "47180",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 # Modèle utilisateur custom
