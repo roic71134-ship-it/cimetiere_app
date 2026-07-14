@@ -160,9 +160,11 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Cimetière de France <no
 BREVO_API_KEY = env("BREVO_API_KEY", default="")
 
 # CORS
+# CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8550",
     "http://127.0.0.1:8550",
+    "https://cimetiereapp-production.up.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
