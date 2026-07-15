@@ -2,7 +2,7 @@ import flet as ft
 from config import COULEURS, APP_NOM
 
 BREAKPOINT_MOBILE = 700
-IMAGE_FOND = "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&q=80"
+IMAGE_FOND = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
 
 
 def vue_inscription(page: ft.Page, on_success, on_login):
@@ -160,19 +160,19 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         content=ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Réservez un caveau en ligne", color="white", size=13)], spacing=8),
-                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Suivez vos demandes", color="white", size=13)], spacing=8),
-                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Payez en toute sécurité", color="white", size=13)], spacing=8),
-                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Accédez à la carte interactive", color="white", size=13)], spacing=8),
+                    ft.Text("🦅", size=44 if mobile else 60),
+                    ft.Container(height=10),
+                    ft.Text(APP_NOM, size=16 if mobile else 20, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                    ft.Container(height=6),
+                    ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#CCCCCC", text_align=ft.TextAlign.CENTER),
                 ],
-                spacing=12,
-                horizontal_alignment=ft.CrossAxisAlignment.START,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
-            bgcolor="#0D2136B3",
-            padding=ft.padding.symmetric(horizontal=24, vertical=20) if mobile else 40,
+            bgcolor="#0D2136CC",
+            padding=ft.padding.symmetric(horizontal=20, vertical=20) if mobile else 40,
             expand=True,
-            alignment=ft.alignment.center_left,
+            alignment=ft.alignment.center,
         ),
         image_src=IMAGE_FOND,
         image_fit=ft.ImageFit.COVER,
