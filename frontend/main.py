@@ -46,15 +46,7 @@ def main(page: ft.Page):
                         ft.Container(height=15),
                         ft.Text(APP_NOM, size=18 if mobile else 22, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
                         ft.Container(height=8),
-                        ft.Text("République du Congo", size=13, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
-                        ft.Container(height=15 if mobile else 40),
-                        ft.Text(
-                            "Gestion moderne\ndu patrimoine funéraire",
-                            size=14 if mobile else 16,
-                            color="#FFFFFFB3",
-                            text_align=ft.TextAlign.CENTER,
-                            visible=not mobile,
-                        ),
+                        ft.Text("État de France", size=13, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     alignment=ft.MainAxisAlignment.CENTER,
@@ -259,15 +251,14 @@ def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=Fals
         on_click=on_login,
     )
 
-    btn_inscription = ft.OutlinedButton(
+    btn_inscription = ft.ElevatedButton(
         text="Créer un compte",
         width=largeur_champ,
         expand=mobile,
         height=45,
-        style=ft.ButtonStyle(
-            color=COULEURS["primaire"],
-            shape=ft.RoundedRectangleBorder(radius=10),
-        ),
+        bgcolor=COULEURS["primaire"],
+        color="white",
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
         on_click=lambda e: aller_inscription(),
     )
 
