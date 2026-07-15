@@ -10,7 +10,7 @@ BREAKPOINT_MOBILE = 700
 def main(page: ft.Page):
     page.title = APP_NOM
     page.theme_mode = ft.ThemeMode.DARK
-    page.bgcolor = COULEURS["primaire"]
+    page.bgcolor = "#F0F1F3"
     page.padding = 0
 
     email_temp = {"value": ""}
@@ -27,6 +27,21 @@ def main(page: ft.Page):
     def est_mobile():
         return (page.width or 1200) < BREAKPOINT_MOBILE
 
+    def bandeau_officiel():
+        return ft.Container(
+            content=ft.Row(
+                controls=[
+                    ft.Text("🦅", size=18),
+                    ft.Container(width=8),
+                    ft.Text("État de France", size=13, weight=ft.FontWeight.W_500, color="white"),
+                ],
+                alignment=ft.MainAxisAlignment.START,
+            ),
+            bgcolor="#0D2136",
+            padding=ft.padding.symmetric(horizontal=24, vertical=10),
+            width=float("inf"),
+        )
+
     def afficher_login():
         def on_login_success(email):
             email_temp["value"] = email
@@ -39,36 +54,62 @@ def main(page: ft.Page):
             page.controls.clear()
             mobile = est_mobile()
 
-            carte = ft.Container(
-                content=_vue_login_avec_inscription(page, on_login_success, aller_inscription, mobile),
-                width=None if mobile else 420,
-                bgcolor="white",
-                border_radius=16,
-                padding=ft.padding.symmetric(horizontal=24, vertical=32) if mobile else ft.padding.all(40),
-                shadow=ft.BoxShadow(
-                    spread_radius=0,
-                    blur_radius=30,
-                    color="#00000040",
-                    offset=ft.Offset(0, 8),
-                ),
-            )
-
-            layout = ft.Container(
+            panneau_marque = ft.Container(
                 content=ft.Column(
-                    controls=[carte],
+                    controls=[
+                        ft.Text("🦅", size=48 if mobile else 64),
+                        ft.Container(height=20),
+                        ft.Text(APP_NOM, size=20 if mobile else 24, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                        ft.Container(height=6),
+                        ft.Container(
+                            content=ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#AABBCC", text_align=ft.TextAlign.CENTER),
+                        ),
+                        ft.Container(height=1, bgcolor="#FFFFFF33", width=60, margin=ft.margin.symmetric(vertical=24)),
+                        ft.Text(
+                            "Accès réservé aux personnels\nautorisés et aux usagers enregistrés.",
+                            size=13,
+                            color="#B8C4D0",
+                            text_align=ft.TextAlign.CENTER,
+                            visible=not mobile,
+                        ),
+                    ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     alignment=ft.MainAxisAlignment.CENTER,
-                    scroll=ft.ScrollMode.AUTO,
+                ),
+                bgcolor=COULEURS["primaire"],
+                width=None if mobile else 420,
+                padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
+            )
+
+            panneau_formulaire = ft.Container(
+                content=ft.Column(
+                    controls=[
+                        bandeau_officiel(),
+                        ft.Container(
+                            content=_vue_login_avec_inscription(page, on_login_success, aller_inscription, mobile),
+                            expand=True,
+                        ),
+                    ],
+                    spacing=0,
+                    expand=True,
                 ),
                 expand=True,
-                padding=ft.padding.symmetric(horizontal=16, vertical=24) if mobile else 0,
-                alignment=ft.alignment.center,
-                gradient=ft.LinearGradient(
-                    begin=ft.alignment.top_center,
-                    end=ft.alignment.bottom_center,
-                    colors=[COULEURS["primaire"], COULEURS["secondaire"]],
-                ),
+                bgcolor="white",
             )
+
+            if mobile:
+                layout = ft.Column(
+                    controls=[panneau_marque, panneau_formulaire],
+                    expand=True,
+                    spacing=0,
+                    scroll=ft.ScrollMode.AUTO,
+                )
+            else:
+                layout = ft.Row(
+                    controls=[panneau_marque, panneau_formulaire],
+                    expand=True,
+                    spacing=0,
+                )
 
             page.controls.append(layout)
             page.update()
@@ -106,36 +147,56 @@ def main(page: ft.Page):
             page.controls.clear()
             mobile = est_mobile()
 
-            carte = ft.Container(
-                content=vue_mfa(page, email, on_mfa_success),
-                width=None if mobile else 420,
-                bgcolor="white",
-                border_radius=16,
-                padding=ft.padding.symmetric(horizontal=24, vertical=32) if mobile else ft.padding.all(40),
-                shadow=ft.BoxShadow(
-                    spread_radius=0,
-                    blur_radius=30,
-                    color="#00000040",
-                    offset=ft.Offset(0, 8),
-                ),
-            )
-
-            layout = ft.Container(
+            panneau_marque = ft.Container(
                 content=ft.Column(
-                    controls=[carte],
+                    controls=[
+                        ft.Icon(ft.icons.SECURITY, size=48 if mobile else 64, color="white"),
+                        ft.Container(height=20),
+                        ft.Text("Vérification de sécurité", size=18 if mobile else 22, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                        ft.Container(height=1, bgcolor="#FFFFFF33", width=60, margin=ft.margin.symmetric(vertical=24)),
+                        ft.Text(
+                            "Votre compte est protégé par\nune double authentification.",
+                            size=13, color="#B8C4D0", text_align=ft.TextAlign.CENTER,
+                            visible=not mobile,
+                        ),
+                    ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     alignment=ft.MainAxisAlignment.CENTER,
-                    scroll=ft.ScrollMode.AUTO,
+                ),
+                bgcolor=COULEURS["primaire"],
+                width=None if mobile else 420,
+                padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
+            )
+
+            panneau_formulaire = ft.Container(
+                content=ft.Column(
+                    controls=[
+                        bandeau_officiel(),
+                        ft.Container(
+                            content=vue_mfa(page, email, on_mfa_success),
+                            expand=True,
+                        ),
+                    ],
+                    spacing=0,
+                    expand=True,
                 ),
                 expand=True,
-                padding=ft.padding.symmetric(horizontal=16, vertical=24) if mobile else 0,
-                alignment=ft.alignment.center,
-                gradient=ft.LinearGradient(
-                    begin=ft.alignment.top_center,
-                    end=ft.alignment.bottom_center,
-                    colors=[COULEURS["primaire"], COULEURS["secondaire"]],
-                ),
+                bgcolor="white",
             )
+
+            if mobile:
+                layout = ft.Column(
+                    controls=[panneau_marque, panneau_formulaire],
+                    expand=True,
+                    spacing=0,
+                    scroll=ft.ScrollMode.AUTO,
+                )
+            else:
+                layout = ft.Row(
+                    controls=[panneau_marque, panneau_formulaire],
+                    expand=True,
+                    spacing=0,
+                )
 
             page.controls.append(layout)
             page.update()
@@ -175,26 +236,30 @@ def main(page: ft.Page):
 def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=False):
     from api_client import client
 
+    largeur_champ = None if mobile else 360
+
     email_input = ft.TextField(
         label="Adresse email",
         hint_text="exemple@email.com",
         prefix_icon=ft.icons.EMAIL_OUTLINED,
-        border_radius=10,
-        border_color="#E0E0E0",
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
-        expand=True,
+        width=largeur_champ,
+        expand=mobile,
     )
     password_input = ft.TextField(
         label="Mot de passe",
         password=True,
         can_reveal_password=True,
         prefix_icon=ft.icons.LOCK_OUTLINED,
-        border_radius=10,
-        border_color="#E0E0E0",
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
-        expand=True,
+        width=largeur_champ,
+        expand=mobile,
     )
     message = ft.Text("", color=COULEURS["danger"], size=13)
     loading = ft.ProgressRing(width=20, height=20, visible=False)
@@ -224,60 +289,59 @@ def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=Fals
 
     btn_login = ft.ElevatedButton(
         text="Se connecter",
-        expand=True,
-        height=48,
+        width=largeur_champ,
+        expand=mobile,
+        height=46,
         bgcolor=COULEURS["primaire"],
         color="white",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4)),
         on_click=on_login,
     )
 
     btn_inscription = ft.ElevatedButton(
         text="Créer un compte",
-        expand=True,
-        height=45,
+        width=largeur_champ,
+        expand=mobile,
+        height=44,
         bgcolor=COULEURS["primaire"],
         color="white",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4)),
         on_click=lambda e: aller_inscription(),
     )
 
     contenu_colonne = [
-        ft.Container(
-            content=ft.Text("🦅", size=44),
-            width=76,
-            height=76,
-            border_radius=38,
-            bgcolor=COULEURS["fond"] if "fond" in COULEURS else "#F0F2F5",
-            alignment=ft.alignment.center,
-        ),
-        ft.Container(height=16),
-        ft.Text(APP_NOM, size=20, weight=ft.FontWeight.BOLD, color=COULEURS["primaire"], text_align=ft.TextAlign.CENTER),
-        ft.Text("État de France", size=13, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
+        ft.Container(height=40 if mobile else 60),
+        ft.Text("CONNEXION", size=13, weight=ft.FontWeight.W_500, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
+        ft.Container(height=6),
+        ft.Text("Accédez à votre espace", size=22 if mobile else 24, weight=ft.FontWeight.BOLD, color=COULEURS["texte"]),
         ft.Container(height=28),
-        ft.Text("Connexion", size=22, weight=ft.FontWeight.BOLD, color=COULEURS["texte"]),
-        ft.Container(height=18),
         email_input,
-        ft.Container(height=12),
+        ft.Container(height=14),
         password_input,
         ft.Container(height=6),
         message,
-        ft.Container(height=16),
+        ft.Container(height=18),
         btn_login,
         loading,
-        ft.Container(height=16),
+        ft.Container(height=20),
         ft.Divider(color="#E0E0E0"),
-        ft.Container(height=12),
+        ft.Container(height=14),
         ft.Text("Pas encore de compte ?", size=13, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
         ft.Container(height=8),
         btn_inscription,
+        ft.Container(height=30),
     ]
 
-    return ft.Column(
-        controls=contenu_colonne,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=0,
-        tight=True,
+    return ft.Container(
+        content=ft.Column(
+            controls=contenu_colonne,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=0,
+            scroll=ft.ScrollMode.AUTO,
+        ),
+        padding=ft.padding.symmetric(horizontal=20, vertical=10) if mobile else ft.padding.symmetric(horizontal=50),
+        alignment=ft.alignment.center,
+        expand=True,
     )
 
 
