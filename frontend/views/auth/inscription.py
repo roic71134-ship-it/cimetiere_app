@@ -2,7 +2,7 @@ import flet as ft
 from config import COULEURS, APP_NOM
 
 BREAKPOINT_MOBILE = 700
-IMAGE_FOND = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
+IMAGE_FOND = "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=800&q=80"
 
 
 def vue_inscription(page: ft.Page, on_success, on_login):
@@ -160,32 +160,19 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         content=ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("🦅", size=44 if mobile else 60),
-                    ft.Container(height=10),
-                    ft.Text(APP_NOM, size=16 if mobile else 20, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                    ft.Container(height=6),
-                    ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#CCCCCC", text_align=ft.TextAlign.CENTER),
-                    ft.Container(height=1, bgcolor="#FFFFFF55", width=60, margin=ft.margin.symmetric(vertical=20)),
-                    ft.Container(
-                        content=ft.Column(
-                            controls=[
-                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Réservez un caveau en ligne", color="white", size=13)], spacing=8),
-                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Suivez vos demandes", color="white", size=13)], spacing=8),
-                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Payez en toute sécurité", color="white", size=13)], spacing=8),
-                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Accédez à la carte interactive", color="white", size=13)], spacing=8),
-                            ],
-                            spacing=10 if mobile else 12,
-                        ),
-                        visible=not mobile,
-                    ),
+                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Réservez un caveau en ligne", color="white", size=13)], spacing=8),
+                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Suivez vos demandes", color="white", size=13)], spacing=8),
+                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Payez en toute sécurité", color="white", size=13)], spacing=8),
+                    ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Accédez à la carte interactive", color="white", size=13)], spacing=8),
                 ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=12,
+                horizontal_alignment=ft.CrossAxisAlignment.START,
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             bgcolor="#0D2136B3",
-            padding=ft.padding.symmetric(horizontal=20, vertical=20) if mobile else 40,
+            padding=ft.padding.symmetric(horizontal=24, vertical=20) if mobile else 40,
             expand=True,
-            alignment=ft.alignment.center,
+            alignment=ft.alignment.center_left,
         ),
         image_src=IMAGE_FOND,
         image_fit=ft.ImageFit.COVER,
