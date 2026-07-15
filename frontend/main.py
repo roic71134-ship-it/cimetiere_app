@@ -5,7 +5,7 @@ from views.auth.mfa import vue_mfa
 from views.auth.inscription import vue_inscription
 
 BREAKPOINT_MOBILE = 700
-IMAGE_FOND = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=800&q=80"
+IMAGE_FOND = "F.jpg"
 
 
 def main(page: ft.Page):
