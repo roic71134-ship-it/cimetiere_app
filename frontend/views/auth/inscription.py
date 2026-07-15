@@ -160,10 +160,6 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         content=ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Text("🦅", size=44 if mobile else 60),
-                    ft.Container(height=10),
-                    ft.Text(APP_NOM, size=16 if mobile else 20, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                    ft.Container(height=6),
                     ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#CCCCCC", text_align=ft.TextAlign.CENTER),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
