@@ -3,7 +3,7 @@ from config import COULEURS, APP_NOM
 
 
 def vue_mfa(page: ft.Page, email: str, on_success):
-    """Page MFA — Étape 2 : Saisie du code reçu par email."""
+    """Page MFA — Étape 2 : Confirmation d'identité."""
 
     code_input = ft.TextField(
         label="Code de vérification",
@@ -48,9 +48,10 @@ def vue_mfa(page: ft.Page, email: str, on_success):
 
     def on_retour(e):
         page.go("/login")
+        page.update()
 
     btn_verify = ft.ElevatedButton(
-        text="Vérifier le code",
+        text="Confirmer le code",
         width=380,
         height=45,
         bgcolor=COULEURS["primaire"],
@@ -59,30 +60,30 @@ def vue_mfa(page: ft.Page, email: str, on_success):
         on_click=on_verify,
     )
 
+    btn_retour = ft.IconButton(
+        icon=ft.icons.ARROW_BACK,
+        icon_color=COULEURS["secondaire"],
+        on_click=on_retour,
+    )
+
     return ft.Container(
         content=ft.Column(
             controls=[
-                ft.Container(height=40),
-                ft.Icon(
-                    ft.icons.MARK_EMAIL_READ_OUTLINED,
-                    size=60,
-                    color=COULEURS["primaire"],
+                ft.Row(
+                    controls=[btn_retour],
+                    alignment=ft.MainAxisAlignment.START,
                 ),
+                ft.Container(height=20),
+                ft.Text("🦅", size=60, text_align=ft.TextAlign.CENTER),
                 ft.Container(height=10),
                 ft.Text(
-                    "Vérification en deux étapes",
+                    "Confirmation d'identité",
                     size=20,
                     weight=ft.FontWeight.BOLD,
                     color=COULEURS["primaire"],
                     text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Container(height=10),
-                ft.Text(
-                    f"Un code a été envoyé à",
-                    size=13,
-                    color=COULEURS["texte_clair"],
-                    text_align=ft.TextAlign.CENTER,
-                ),
                 ft.Text(
                     email,
                     size=14,
@@ -98,14 +99,6 @@ def vue_mfa(page: ft.Page, email: str, on_success):
                 btn_verify,
                 ft.Container(height=10),
                 loading,
-                ft.Container(height=20),
-                ft.TextButton(
-                    "Retour à la connexion",
-                    on_click=on_retour,
-                    style=ft.ButtonStyle(
-                        color=COULEURS["secondaire"],
-                    ),
-                ),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=0,
