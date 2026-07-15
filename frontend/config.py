@@ -1,4 +1,5 @@
-﻿API_BASE_URL = os.environ.get("API_BASE_URL", "https://cimetiereapp-production.up.railway.app/api/v1")
+import os
+API_BASE_URL = os.environ.get("API_BASE_URL", "https://cimetiereapp-production.up.railway.app/api/v1")
 
 COULEURS = {
     "primaire":     "#800080",
