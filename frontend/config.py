@@ -1,4 +1,4 @@
-﻿API_BASE_URL = "http://127.0.0.1:8000/api/v1"
+﻿API_BASE_URL = os.environ.get("API_BASE_URL", "https://cimetiereapp-production.up.railway.app/api/v1")
 
 COULEURS = {
     "primaire":     "#800080",
