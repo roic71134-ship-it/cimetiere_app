@@ -5,6 +5,7 @@ from views.auth.mfa import vue_mfa
 from views.auth.inscription import vue_inscription
 
 BREAKPOINT_MOBILE = 700
+IMAGE_FOND = "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=800&q=80"
 
 
 def main(page: ft.Page):
@@ -55,30 +56,34 @@ def main(page: ft.Page):
             mobile = est_mobile()
 
             panneau_marque = ft.Container(
-                content=ft.Column(
-                    controls=[
-                        ft.Text("🦅", size=48 if mobile else 64),
-                        ft.Container(height=20),
-                        ft.Text(APP_NOM, size=20 if mobile else 24, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                        ft.Container(height=6),
-                        ft.Container(
-                            content=ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#AABBCC", text_align=ft.TextAlign.CENTER),
-                        ),
-                        ft.Container(height=1, bgcolor="#FFFFFF33", width=60, margin=ft.margin.symmetric(vertical=24)),
-                        ft.Text(
-                            "Accès réservé aux personnels\nautorisés et aux usagers enregistrés.",
-                            size=13,
-                            color="#B8C4D0",
-                            text_align=ft.TextAlign.CENTER,
-                            visible=not mobile,
-                        ),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    alignment=ft.MainAxisAlignment.CENTER,
+                content=ft.Container(
+                    content=ft.Column(
+                        controls=[
+                            ft.Text("🦅", size=48 if mobile else 64),
+                            ft.Container(height=20),
+                            ft.Text(APP_NOM, size=20 if mobile else 24, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                            ft.Container(height=6),
+                            ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#CCCCCC", text_align=ft.TextAlign.CENTER),
+                            ft.Container(height=1, bgcolor="#FFFFFF55", width=60, margin=ft.margin.symmetric(vertical=24)),
+                            ft.Text(
+                                "Accès réservé aux personnels\nautorisés et aux usagers enregistrés.",
+                                size=13,
+                                color="#DDDDDD",
+                                text_align=ft.TextAlign.CENTER,
+                                visible=not mobile,
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    bgcolor="#0D2136B3",
+                    padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
+                    expand=True,
+                    alignment=ft.alignment.center,
                 ),
-                bgcolor=COULEURS["primaire"],
+                image_src=IMAGE_FOND,
+                image_fit=ft.ImageFit.COVER,
                 width=None if mobile else 420,
-                padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
             )
 
             panneau_formulaire = ft.Container(
@@ -148,24 +153,30 @@ def main(page: ft.Page):
             mobile = est_mobile()
 
             panneau_marque = ft.Container(
-                content=ft.Column(
-                    controls=[
-                        ft.Icon(ft.icons.SECURITY, size=48 if mobile else 64, color="white"),
-                        ft.Container(height=20),
-                        ft.Text("Vérification de sécurité", size=18 if mobile else 22, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                        ft.Container(height=1, bgcolor="#FFFFFF33", width=60, margin=ft.margin.symmetric(vertical=24)),
-                        ft.Text(
-                            "Votre compte est protégé par\nune double authentification.",
-                            size=13, color="#B8C4D0", text_align=ft.TextAlign.CENTER,
-                            visible=not mobile,
-                        ),
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    alignment=ft.MainAxisAlignment.CENTER,
+                content=ft.Container(
+                    content=ft.Column(
+                        controls=[
+                            ft.Icon(ft.icons.SECURITY, size=48 if mobile else 64, color="white"),
+                            ft.Container(height=20),
+                            ft.Text("Vérification de sécurité", size=18 if mobile else 22, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                            ft.Container(height=1, bgcolor="#FFFFFF55", width=60, margin=ft.margin.symmetric(vertical=24)),
+                            ft.Text(
+                                "Votre compte est protégé par\nune double authentification.",
+                                size=13, color="#DDDDDD", text_align=ft.TextAlign.CENTER,
+                                visible=not mobile,
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                    ),
+                    bgcolor="#0D2136B3",
+                    padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
+                    expand=True,
+                    alignment=ft.alignment.center,
                 ),
-                bgcolor=COULEURS["primaire"],
+                image_src=IMAGE_FOND,
+                image_fit=ft.ImageFit.COVER,
                 width=None if mobile else 420,
-                padding=ft.padding.symmetric(horizontal=20, vertical=30) if mobile else 50,
             )
 
             panneau_formulaire = ft.Container(
