@@ -2,15 +2,20 @@ import flet as ft
 from config import COULEURS, APP_NOM
 
 BREAKPOINT_MOBILE = 700
+IMAGE_FOND = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
 
 
 def vue_inscription(page: ft.Page, on_success, on_login):
     mobile = (page.width or 1200) < BREAKPOINT_MOBILE
 
+    def label_section(texte):
+        return ft.Text(texte, size=12, weight=ft.FontWeight.W_500, color=COULEURS["primaire"])
+
     prenom_input = ft.TextField(
         label="Prénom *",
         prefix_icon=ft.icons.PERSON,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -18,7 +23,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     nom_input = ft.TextField(
         label="Nom *",
         prefix_icon=ft.icons.PERSON,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -26,7 +32,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     email_input = ft.TextField(
         label="Adresse email *",
         prefix_icon=ft.icons.EMAIL,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -35,7 +42,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     telephone_input = ft.TextField(
         label="Téléphone *",
         prefix_icon=ft.icons.PHONE,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -43,7 +51,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     adresse_input = ft.TextField(
         label="Adresse",
         prefix_icon=ft.icons.LOCATION_ON,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -53,7 +62,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         password=True,
         can_reveal_password=True,
         prefix_icon=ft.icons.LOCK,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -63,7 +73,8 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         password=True,
         can_reveal_password=True,
         prefix_icon=ft.icons.LOCK,
-        border_radius=10,
+        border_radius=4,
+        border_color="#CCCCCC",
         focused_border_color=COULEURS["primaire"],
         color="black",
         expand=True,
@@ -75,7 +86,6 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     def on_inscrire(e):
         from api_client import client
 
-        # Validation
         if not all([prenom_input.value, nom_input.value, email_input.value,
                     telephone_input.value, password_input.value, confirm_password_input.value]):
             message.value = "Veuillez remplir tous les champs obligatoires (*)"
@@ -126,15 +136,19 @@ def vue_inscription(page: ft.Page, on_success, on_login):
         height=48,
         bgcolor=COULEURS["primaire"],
         color="white",
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=4)),
         on_click=on_inscrire,
     )
 
-    # Sur mobile : champs empilés en colonne au lieu de côte à côte
     ligne_noms = (
         ft.Column(controls=[prenom_input, nom_input], spacing=8)
         if mobile else
         ft.Row(controls=[prenom_input, nom_input], spacing=10)
+    )
+    ligne_contact = (
+        ft.Column(controls=[email_input, telephone_input], spacing=8)
+        if mobile else
+        ft.Row(controls=[email_input, telephone_input], spacing=10)
     )
     ligne_mdp = (
         ft.Column(controls=[password_input, confirm_password_input], spacing=8)
@@ -143,59 +157,73 @@ def vue_inscription(page: ft.Page, on_success, on_login):
     )
 
     panneau_gauche = ft.Container(
-        content=ft.Column(
-            controls=[
-                ft.Icon(ft.icons.HOME_WORK, size=50 if mobile else 70, color="white"),
-                ft.Container(height=10),
-                ft.Text(APP_NOM, size=16 if mobile else 20, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                ft.Container(height=8),
-                ft.Text("République du Congo", size=12, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
-                ft.Container(height=15 if mobile else 40),
-                ft.Container(
-                    content=ft.Column(
-                        controls=[
-                            ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Réservez un caveau en ligne", color="white", size=13)], spacing=8),
-                            ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Suivez vos demandes", color="white", size=13)], spacing=8),
-                            ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Payez en toute sécurité", color="white", size=13)], spacing=8),
-                            ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Accédez à la carte interactive", color="white", size=13)], spacing=8),
-                        ],
-                        spacing=10 if mobile else 12,
+        content=ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Text("🦅", size=44 if mobile else 60),
+                    ft.Container(height=10),
+                    ft.Text(APP_NOM, size=16 if mobile else 20, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                    ft.Container(height=6),
+                    ft.Text("SYSTÈME DE GESTION", size=11, weight=ft.FontWeight.W_500, color="#CCCCCC", text_align=ft.TextAlign.CENTER),
+                    ft.Container(height=1, bgcolor="#FFFFFF55", width=60, margin=ft.margin.symmetric(vertical=20)),
+                    ft.Container(
+                        content=ft.Column(
+                            controls=[
+                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Réservez un caveau en ligne", color="white", size=13)], spacing=8),
+                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Suivez vos demandes", color="white", size=13)], spacing=8),
+                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Payez en toute sécurité", color="white", size=13)], spacing=8),
+                                ft.Row(controls=[ft.Icon(ft.icons.CHECK_CIRCLE, color="#4CAF50", size=16), ft.Text("Accédez à la carte interactive", color="white", size=13)], spacing=8),
+                            ],
+                            spacing=10 if mobile else 12,
+                        ),
+                        visible=not mobile,
                     ),
-                    visible=not mobile,
-                ),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            alignment=ft.MainAxisAlignment.CENTER,
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            bgcolor="#0D2136B3",
+            padding=ft.padding.symmetric(horizontal=20, vertical=20) if mobile else 40,
+            expand=True,
+            alignment=ft.alignment.center,
         ),
-        bgcolor=COULEURS["primaire"],
+        image_src=IMAGE_FOND,
+        image_fit=ft.ImageFit.COVER,
         width=None if mobile else 380,
-        padding=ft.padding.symmetric(horizontal=20, vertical=20) if mobile else 40,
     )
 
     panneau_formulaire = ft.Container(
         content=ft.Column(
             controls=[
                 ft.Container(height=15 if mobile else 20),
-                ft.Icon(ft.icons.PERSON_ADD, size=36 if mobile else 45, color=COULEURS["primaire"]),
-                ft.Container(height=8),
-                ft.Text("Créer un compte", size=20 if mobile else 24, weight=ft.FontWeight.BOLD, color=COULEURS["titre"]),
+                ft.Text("INSCRIPTION", size=13, weight=ft.FontWeight.W_500, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
+                ft.Container(height=6),
+                ft.Text("Créer un compte", size=20 if mobile else 24, weight=ft.FontWeight.BOLD, color=COULEURS["texte"]),
                 ft.Text("Rejoignez le portail du cimetière municipal", size=12 if mobile else 13, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
-                ft.Container(height=20),
+                ft.Container(height=24),
+
+                label_section("INFORMATIONS PERSONNELLES"),
+                ft.Container(height=8),
                 ligne_noms,
+                ft.Container(height=20),
+
+                label_section("COORDONNÉES"),
                 ft.Container(height=8),
-                email_input,
-                ft.Container(height=8),
-                telephone_input,
+                ligne_contact,
                 ft.Container(height=8),
                 adresse_input,
+                ft.Container(height=20),
+
+                label_section("SÉCURITÉ"),
                 ft.Container(height=8),
                 ligne_mdp,
-                ft.Container(height=5),
+
+                ft.Container(height=8),
                 message,
-                ft.Container(height=10),
+                ft.Container(height=14),
                 btn_inscrire,
                 loading,
-                ft.Container(height=10),
+                ft.Container(height=14),
                 ft.Row(
                     controls=[
                         ft.Text("Déjà un compte ?", size=13, color=COULEURS["texte_clair"]),
@@ -209,7 +237,7 @@ def vue_inscription(page: ft.Page, on_success, on_login):
                 ),
                 ft.Container(height=20),
             ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.START if not mobile else ft.CrossAxisAlignment.CENTER,
             scroll=ft.ScrollMode.AUTO,
             spacing=0,
         ),
