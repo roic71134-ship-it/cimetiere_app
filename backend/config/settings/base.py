@@ -160,7 +160,7 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Cimetière de France <noreply@cimetiere-pn.cg>")
 BREVO_API_KEY = env("BREVO_API_KEY", default="")
-
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # CORS
 # CORS
 CORS_ALLOWED_ORIGINS = [
