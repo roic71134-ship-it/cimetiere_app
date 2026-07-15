@@ -15,7 +15,6 @@ def main(page: ft.Page):
 
     email_temp = {"value": ""}
 
-    # Vérifier si on vient de la carte avec un caveau pré-sélectionné
     caveau_id = None
     caveau_ref = None
     try:
@@ -43,7 +42,7 @@ def main(page: ft.Page):
             panneau_marque = ft.Container(
                 content=ft.Column(
                     controls=[
-                        ft.Icon(ft.icons.HOME_WORK, size=60 if mobile else 80, color="white"),
+                        ft.Text("🦅", size=60 if mobile else 80),
                         ft.Container(height=15),
                         ft.Text(APP_NOM, size=18 if mobile else 22, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
                         ft.Container(height=8),
@@ -189,7 +188,6 @@ def main(page: ft.Page):
             from views.client.dashboard import vue_dashboard_client
             page.controls.append(vue_dashboard_client(page, afficher_login, caveau_id=caveau_id))
         else:
-            # Rôle inconnu — dashboard admin par défaut
             from views.dashboard.dashboard import vue_dashboard
             page.controls.append(vue_dashboard(page, afficher_login))
 
@@ -262,7 +260,7 @@ def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=Fals
     )
 
     btn_inscription = ft.OutlinedButton(
-        text="Créer un compte citoyen",
+        text="Créer un compte",
         width=largeur_champ,
         expand=mobile,
         height=45,
@@ -275,7 +273,7 @@ def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=Fals
 
     contenu_colonne = [
         ft.Container(height=25 if mobile else 40),
-        ft.Icon(ft.icons.HOME_WORK, size=40 if mobile else 50, color=COULEURS["primaire"]),
+        ft.Text("🦅", size=40 if mobile else 50),
         ft.Container(height=10),
         ft.Text(APP_NOM, size=16 if mobile else 18, weight=ft.FontWeight.BOLD, color=COULEURS["primaire"], text_align=ft.TextAlign.CENTER),
         ft.Text("Système de gestion du cimetière", size=12 if mobile else 13, color=COULEURS["texte_clair"], text_align=ft.TextAlign.CENTER),
