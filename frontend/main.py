@@ -312,4 +312,11 @@ def _vue_login_avec_inscription(page, on_success, aller_inscription, mobile=Fals
     )
 
 
-ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=8550)
+import os
+
+ft.app(
+    target=main,
+    view=ft.AppView.WEB_BROWSER,
+    port=int(os.environ.get("PORT", 8550)),
+    host="0.0.0.0",
+)
