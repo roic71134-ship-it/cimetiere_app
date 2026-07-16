@@ -3,8 +3,8 @@ from config import COULEURS
 
 
 def vue_gestion_terrain(page: ft.Page):
-    from api_client import get_client
-    client = get_client(page)
+    from api_client import client
+
 
     def snack(msg, couleur=None):
         page.snack_bar = ft.SnackBar(
