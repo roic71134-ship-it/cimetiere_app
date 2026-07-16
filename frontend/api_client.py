@@ -329,12 +329,6 @@ class APIClient:
         except Exception as e:
             return {"error": str(e)}    
 
-# Instance globale
-
-def get_client(page) -> APIClient:
-    """Retourne une instance d'APIClient propre à chaque session utilisateur."""
-    api_client = page.session.get("api_client")
-    if api_client is None:
-        api_client = APIClient()
-        page.session.set("api_client", api_client)
-    return api_client
+# Instance 
+client = APIClient()
+    
