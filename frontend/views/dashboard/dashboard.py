@@ -131,7 +131,7 @@ def vue_dashboard(page: ft.Page, on_deconnexion):
         content=ft.Column(
             controls=[
                 ft.Icon(ft.icons.HOME_WORK, size=40, color="white"),
-                ft.Text("Cimetière de france", size=13, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                ft.Text("Cimetière Municipal", size=13, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
                 ft.Text("Pointe-Noire", size=11, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
