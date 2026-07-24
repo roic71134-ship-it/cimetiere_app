@@ -65,9 +65,9 @@ def vue_dashboard_client(page: ft.Page, on_deconnexion, caveau_id=None):
     en_tete_menu = ft.Container(
         content=ft.Column(
             controls=[
-                ft.Icon(ft.icons.HOME_WORK, size=40, color="white"),
-                ft.Text("Cimetière Municipal", size=13, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
-                ft.Text("Pointe-Noire", size=11, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
+                
+                ft.Text("Cimetière de france", size=13, weight=ft.FontWeight.BOLD, color="white", text_align=ft.TextAlign.CENTER),
+                ft.Text("PARIS LA BELLE", size=11, color="#FFFFFFB3", text_align=ft.TextAlign.CENTER),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
@@ -254,13 +254,13 @@ def _accueil_client(user):
                         controls=[
                             ft.Column(
                                 controls=[
-                                    ft.Text(f"Bonjour, {nom} 👋", size=26, weight=ft.FontWeight.BOLD, color="white"),
-                                    ft.Text("Bienvenue sur votre espace personnel", size=14, color="#FFFFFFCC"),
+                                    ft.Text(f"Bonjour et bien venue , {nom} ", size=26, weight=ft.FontWeight.BOLD, color="white"),
+                                    ft.Text("TABLEAU DE BORD SPECIAL", size=14, color="#FFFFFFCC"),
                                 ],
                                 spacing=4,
                                 expand=True,
                             ),
-                            ft.Icon(ft.icons.HOME_WORK, size=50, color="#FFFFFF33"),
+                            
                         ],
                     ),
                     bgcolor=COULEURS["primaire"],
@@ -299,7 +299,7 @@ def _accueil_client(user):
                         controls=[
                             ft.Icon(ft.icons.INFO, color=COULEURS["primaire"], size=20),
                             ft.Text(
-                                "Pour toute question, contactez le Cimetière Municipal de Pointe-Noire.",
+                                "Pour toute question, contactez nous au 0600010000.",
                                 size=13,
                                 color=COULEURS["texte"],
                                 expand=True,
