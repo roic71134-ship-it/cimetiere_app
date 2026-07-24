@@ -14,7 +14,10 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     libcairo2-dev \
     pkg-config \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -s $(find /usr -name "libgdal.so*" | head -1) /usr/lib/libgdal.so || true \
+    && ln -s $(find /usr -name "libgeos_c.so*" | head -1) /usr/lib/libgeos_c.so || true \
+    && ln -s $(find /usr -name "libproj.so*" | head -1) /usr/lib/libproj.so || true
 
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
@@ -34,4 +37,4 @@ EXPOSE 8000
 
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
-CMD ["/app/start.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000", "--settings=config.settings.production"]
